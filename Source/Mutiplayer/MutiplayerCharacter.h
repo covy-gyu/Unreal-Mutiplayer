@@ -89,7 +89,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 public:
-	
 	/** 최대 체력 게터*/
 	UFUNCTION(BlueprintPure, Category = "Health")
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }

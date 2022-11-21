@@ -198,3 +198,10 @@ void AMutiplayerCharacter::SetCurrentHealth(float healthValue)
 		OnHealthUpdate();
 	}
 }
+
+float AMutiplayerCharacter::TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float damageApplied = CurrentHealth - DamageTaken;
+	SetCurrentHealth(damageApplied);
+	return damageApplied;
+}
