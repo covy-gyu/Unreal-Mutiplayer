@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Net/UnrealNetwork.h"
+#include "Engine/Engine.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMutiplayerCharacter
@@ -45,6 +47,10 @@ AMutiplayerCharacter::AMutiplayerCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	
+	//플레이어 체력 초기화
+	MaxHealth = 100.0f;
+	CurrentHealth = MaxHealth;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -136,5 +142,59 @@ void AMutiplayerCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 리플리케이트된 프로퍼티
+
+void AMutiplayerCharacter::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//현재 체력 리플리케이트
+	DOREPLIFETIME(AMutiplayerCharacter, CurrentHealth);
+}
+
+void AMutiplayerCharacter::OnHealthUpdate()
+{
+	//클라이언트 전용 함수 기능
+	if (IsLocallyControlled())
+	{
+		FString healthMessage = FString::Printf(TEXT("현재 남은 체력 : % f "), CurrentHealth);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+
+		if (CurrentHealth <= 0)
+		{
+			FString deathMessage = FString::Printf(TEXT("당신은 살해당했습니다."));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
+
+		}
+	}
+	//서버 전용 함수 기능
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		FString healthMessage = FString::Printf(TEXT("%s의 현재 남은 체력 : %f"), *GetFName().ToString(), CurrentHealth);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+	}
+
+	//모든 머신에서 실행되는 함수
+	/*
+	
+		여기 대미지 또는 사망의 결과로 발생하는 특별 함수 기능 배치
+	*/
+}
+
+void AMutiplayerCharacter::OnRep_CurrentHealth()
+{
+	OnHealthUpdate();
+}
+
+void AMutiplayerCharacter::SetCurrentHealth(float healthValue)
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		CurrentHealth = FMath::Clamp(healthValue, 0.f, MaxHealth);
+		OnHealthUpdate();
 	}
 }
