@@ -205,12 +205,12 @@ void AMutiplayerCharacter::OnHealthUpdate()
 	//클라이언트 전용 함수 기능
 	if (IsLocallyControlled())
 	{
-		FString healthMessage = FString::Printf(TEXT("현재 남은 체력 : % f "), CurrentHealth);
+		FString healthMessage = FString::Printf(TEXT("Current HP : % f "), CurrentHealth);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 
 		if (CurrentHealth <= 0)
 		{
-			FString deathMessage = FString::Printf(TEXT("당신은 살해당했습니다."));
+			FString deathMessage = FString::Printf(TEXT("You Have been KILLED."));
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
 
 		}
@@ -218,7 +218,7 @@ void AMutiplayerCharacter::OnHealthUpdate()
 	//서버 전용 함수 기능
 	if (GetLocalRole() == ROLE_Authority)
 	{
-		FString healthMessage = FString::Printf(TEXT("%s의 현재 남은 체력 : %f"), *GetFName().ToString(), CurrentHealth);
+		FString healthMessage = FString::Printf(TEXT("%s 's current HP : %f"), *GetFName().ToString(), CurrentHealth);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 	}
 
