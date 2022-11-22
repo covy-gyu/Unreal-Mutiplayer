@@ -35,6 +35,26 @@ AMutiPlayerProjectile::AMutiPlayerProjectile()
 		StaticMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -37.5f));
 		StaticMesh->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
 	}
+
+	
+	//발사체 에셋 설정
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultExplosionEffect(TEXT("'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	if (DefaultExplosionEffect.Succeeded())
+	{
+		ExplosionEffect = DefaultExplosionEffect.Object;
+	}
+	
+	//발사체 무브먼트 컴포넌트 정의
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
+	ProjectileMovementComponent->SetUpdatedComponent(SphereComponent);
+	ProjectileMovementComponent->InitialSpeed = 1500.0f;
+	ProjectileMovementComponent->MaxSpeed = 1500.0f;
+	ProjectileMovementComponent->bRotationFollowsVelocity = true;
+	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+	
+	//발사체 속성 정의
+	DamageType = UDamageType::StaticClass();
+	Damage = 10.0f;
 }
 
 // Called when the game starts or when spawned
