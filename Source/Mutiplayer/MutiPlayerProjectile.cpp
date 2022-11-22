@@ -87,3 +87,10 @@ void AMutiPlayerProjectile::Tick(float DeltaTime)
 
 }
 
+//πﬂªÁ√º º“∏Í
+void AMutiPlayerProjectile::Destroyed()
+{
+	FVector spawnLocation = GetActorLocation();
+	UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionEffect, spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
+}
+

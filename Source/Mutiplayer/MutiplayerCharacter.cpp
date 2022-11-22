@@ -55,7 +55,7 @@ AMutiplayerCharacter::AMutiplayerCharacter()
 
 	///
 	/// <summary>
-	///	발사체 컨트롤
+	///	발사체 컨트롤 변수
 	/// 발사체 클래스 초기화
 	/// </summary>
 	ProjectileClass = AMutiPlayerProjectile::StaticClass();
@@ -66,6 +66,7 @@ AMutiplayerCharacter::AMutiplayerCharacter()
 /// <summary>
 ///	발사체 컨트롤 함수
 /// </summary>
+/// 
 void AMutiplayerCharacter::StartFire()
 {
 	if (!bIsFiringWeapon)
