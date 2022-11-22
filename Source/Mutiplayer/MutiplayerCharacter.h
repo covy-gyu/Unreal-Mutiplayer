@@ -81,9 +81,35 @@ protected:
 	/** 업데이트되는 체력에 반응. 서버에서는 수정 즉시 호출, 클라이언트에서는 RepNotify에 반응하여 호출*/
 	void OnHealthUpdate();
 
+	/// <summary>
+	/// 캐릭터의 발사체 컨트롤
+	/// </summary>
+	
+	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
+    TSubclassOf<class AThirdPersonMPProjectile> ProjectileClass;
 
-	
-	
+    /** 발사 딜레이, 단위는 초. 테스트 발사체의 발사 속도를 제어하는 데 사용되지만, 서버 함수의 추가분이 SpawnProjectile을 입력에 직접 바인딩하지 않게 하는 역할도 합니다.*/
+    UPROPERTY(EditDefaultsOnly, Category="Gameplay")
+    float FireRate;
+
+    /** true인 경우 발사체를 발사하는 프로세스 도중입니다. */
+    bool bIsFiringWeapon;
+
+    /** 무기 발사 시작 함수*/
+    UFUNCTION(BlueprintCallable, Category="Gameplay")
+    void StartFire();
+
+    /** 무기 발사 종료 함수. 호출되면 플레이어가 StartFire를 다시 사용할 수 있습니다.*/
+    UFUNCTION(BlueprintCallable, Category = "Gameplay")
+    void StopFire();  
+
+    /** 발사체를 스폰하는 서버 함수*/
+    UFUNCTION(Server, Reliable)
+    void HandleFire();
+	void HandleFire_Implementation();
+
+    /** 스폰 사이에 발사 속도 딜레이를 넣는 타이머 핸들*/
+    FTimerHandle FiringTimer;
 
 public:
 	/** Returns CameraBoom subobject **/

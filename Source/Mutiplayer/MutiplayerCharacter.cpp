@@ -52,6 +52,45 @@ AMutiplayerCharacter::AMutiplayerCharacter()
 	//플레이어 체력 초기화
 	MaxHealth = 100.0f;
 	CurrentHealth = MaxHealth;
+
+	///
+	/// <summary>
+	///	발사체 컨트롤
+	/// 발사체 클래스 초기화
+	/// </summary>
+	ProjectileClass = AMutiPlayerProjectile::StaticClass();
+	//발사 속도 초기화
+	FireRate = 0.25f;
+	bIsFiringWeapon = false;
+}
+/// <summary>
+///	발사체 컨트롤 함수
+/// </summary>
+void AMutiplayerCharacter::StartFire()
+{
+	if (!bIsFiringWeapon)
+	{
+		bIsFiringWeapon = true;
+		UWorld* World = GetWorld();
+		World->GetTimerManager().SetTimer(FiringTimer, this, &AMutiplayerCharacter::StopFire, FireRate, false);
+		HandleFire();
+	}
+}
+void AMutiplayerCharacter::StopFire()
+{
+	bIsFiringWeapon = false;
+}
+
+void AMutiplayerCharacter::HandleFire_Implementation()
+{
+	FVector spawnLocation = GetActorLocation() + (GetActorRotation().Vector() * 100.0f) + (GetActorUpVector() * 50.0f);
+	FRotator spawnRotation = GetActorRotation();
+
+	FActorSpawnParameters spawnParameters;
+	spawnParameters.Instigator = GetInstigator();
+	spawnParameters.Owner = this;
+
+	AMutiPlayerProjectile* spawnedProjectile = GetWorld()->SpawnActor<AMutiPlayerProjectile>(spawnLocation, spawnRotation, spawnParameters);
 }
 
 //////////////////////////////////////////////////////////////////////////
