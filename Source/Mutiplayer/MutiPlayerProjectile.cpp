@@ -24,7 +24,17 @@ AMutiPlayerProjectile::AMutiPlayerProjectile()
 	SphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	RootComponent = SphereComponent;
 
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	StaticMesh->SetupAttachment(RootComponent);
 
+	//사용할 메시 에셋이 발견되면 스태틱 메시와 위치/스케일 설정
+	if (DefaultMesh.Succeeded())
+	{
+		StaticMesh->SetStaticMesh(DefaultMesh.Object);
+		StaticMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -37.5f));
+		StaticMesh->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
+	}
 }
 
 // Called when the game starts or when spawned
