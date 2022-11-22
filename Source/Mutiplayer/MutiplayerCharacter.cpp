@@ -120,6 +120,9 @@ void AMutiplayerCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMutiplayerCharacter::OnResetVR);
+
+	//발사체 발사 처리
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMutiplayerCharacter::StartFire);
 }
 
 
