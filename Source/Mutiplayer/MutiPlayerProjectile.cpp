@@ -24,9 +24,16 @@ AMutiPlayerProjectile::AMutiPlayerProjectile()
 	SphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	RootComponent = SphereComponent;
 
+	//발사체 충돌 함수를 히트 이벤트에 등록
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		SphereComponent->OnComponentHit.AddDynamic(this, &AMutiPlayerProjectile::OnProjectileImpact);
+	}
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	StaticMesh->SetupAttachment(RootComponent);
+
 
 	//사용할 메시 에셋이 발견되면 스태틱 메시와 위치/스케일 설정
 	if (DefaultMesh.Succeeded())
@@ -36,7 +43,6 @@ AMutiPlayerProjectile::AMutiPlayerProjectile()
 		StaticMesh->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
 	}
 
-	
 	//발사체 에셋 설정
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultExplosionEffect(TEXT("'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
 	if (DefaultExplosionEffect.Succeeded())
@@ -55,6 +61,16 @@ AMutiPlayerProjectile::AMutiPlayerProjectile()
 	//발사체 속성 정의
 	DamageType = UDamageType::StaticClass();
 	Damage = 10.0f;
+}
+
+//발사체 효과
+void AMutiPlayerProjectile::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor)
+	{
+		UGameplayStatics::ApplyPointDamage(OtherActor, Damage, NormalImpulse, Hit, GetInstigator()->Controller, this, DamageType);
+	}
+	Destroy();
 }
 
 // Called when the game starts or when spawned

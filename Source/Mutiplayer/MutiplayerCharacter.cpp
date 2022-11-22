@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/Engine.h"
+#include "MutiPlayerProjectile.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMutiplayerCharacter

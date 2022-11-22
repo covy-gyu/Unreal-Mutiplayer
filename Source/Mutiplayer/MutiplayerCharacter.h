@@ -80,6 +80,9 @@ protected:
 
 	/** 업데이트되는 체력에 반응. 서버에서는 수정 즉시 호출, 클라이언트에서는 RepNotify에 반응하여 호출*/
 	void OnHealthUpdate();
+
+
+	
 	
 
 public:
