@@ -86,7 +86,7 @@ protected:
 	/// </summary>
 	
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
-    TSubclassOf<class AThirdPersonMPProjectile> ProjectileClass;
+    TSubclassOf<class AMutiPlayerProjectile> ProjectileClass;
 
     /** 발사 딜레이, 단위는 초. 테스트 발사체의 발사 속도를 제어하는 데 사용되지만, 서버 함수의 추가분이 SpawnProjectile을 입력에 직접 바인딩하지 않게 하는 역할도 합니다.*/
     UPROPERTY(EditDefaultsOnly, Category="Gameplay")
